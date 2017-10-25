@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "sdkVersion": "20.0.0",
+    "orientation": "portrait",
+    "name": "Fitness",
+    "description": "The best triathlon tracker ever",
+    "slug": "udacfitness",
+    "version": "1.0",
+    "icon": "https://tylermcginnis.com/udacifitness-512.png",
+    "notification": {
+      "icon": "https://tylermcginnis.com/udacifitness-45.png"
+    },
+    "ios": {
+      "bundleIdentifier": "org.Fitness.exp"
+    },
+    "android": {
+      "package": "org.Fitness.exp"
+    }
+  }
+}
