@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text,StyleSheet, Platform, TouchableOpacity  } from 'react-native'
+import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { receiveEntries, addEntry } from '../actions'
 import { timeToString, getDailyReminderValue } from '../utils/helpers'
@@ -8,33 +8,30 @@ import UdaciFitnessCalendar from 'udacifitness-calendar'
 import { white } from '../utils/colors'
 import DateHeader from './DateHeader'
 import MetricCard from './MetricCard'
+//for loading
 import { AppLoading} from 'expo'
 
 class History extends Component {
-state = {
-     ready: false,
-   }
-
+  state = {
+    ready: false,
+  }
   componentDidMount () {
     const { dispatch } = this.props
 
-    //fetch our calendar results
     fetchCalendarResults()
       .then((entries) => dispatch(receiveEntries(entries)))
       .then(({ entries }) => {
         if (!entries[timeToString()]) {
-            //we haven't enter any information for the current day
           dispatch(addEntry({
             [timeToString()]: getDailyReminderValue()
           }))
         }
       })
-    //the data are loaded
+    //for loading data
       .then(() => this.setState(() => ({ready: true})))
   }
-    //it passes an object with tody property and all our metrics
-   renderItem = ({ today, ...metrics }, formattedDate, key) => (
-    <View  style={styles.item}>
+  renderItem = ({ today, ...metrics }, formattedDate, key) => (
+    <View style={styles.item}>
       {today
         ? <View>
             <DateHeader date={formattedDate}/>
@@ -43,18 +40,15 @@ state = {
             </Text>
           </View>
         : <TouchableOpacity
-        //this take us to new screen(StackNavigator)
-        //key: getting from renderItem
             onPress={() => this.props.navigation.navigate(
-               'EntryDetail',
-               { entryId: key }
-             )}
+              'EntryDetail',
+              { entryId: key }
+            )}
           >
-              <MetricCard date={formattedDate} metrics={metrics} /> 
+            <MetricCard date={formattedDate} metrics={metrics} />
           </TouchableOpacity>}
     </View>
   )
-//if specific item in our redux date for that day is null
   renderEmptyDate(formattedDate) {
     return (
       <View style={styles.item}>
@@ -68,12 +62,9 @@ state = {
   render() {
     const { entries } = this.props
     const { ready } = this.state
- 
-    //when still data not ready
     if (ready === false) {
-       return <AppLoading />
+      return <AppLoading />
     }
-
     return (
       <UdaciFitnessCalendar
         items={entries}
@@ -106,13 +97,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   }
 })
-
 function mapStateToProps (entries) {
   return {
     entries
   }
 }
-
 export default connect(
   mapStateToProps,
 )(History)

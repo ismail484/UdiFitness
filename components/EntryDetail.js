@@ -1,19 +1,12 @@
-
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-//timeToString:to get id of the current day
 import { timeToString, getDailyReminderValue } from '../utils/helpers'
 import MetricCard from './MetricCard'
 import { white } from '../utils/helpers'
-//add reset for specific entry
 import TextButton from './TextButton'
 import { addEntry } from '../actions'
 import { removeEntry } from '../utils/api'
-
-//parent is History.js
-//we just fomeat the date to appear on Header
-
 
 class EntryDetail extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -27,25 +20,20 @@ class EntryDetail extends Component {
       title: `${month}/${day}/${year}`
     }
   }
-
-reset = () => {
+  reset = () => {
     const { remove, goBack, entryId } = this.props
 
     remove()
     goBack()
-    //invoke api
     removeEntry(entryId)
   }
-//if we hit reset,  metrics: state[entryId], will be null 
-shouldComponentUpdate (nextProps) {
-    //don't render this component if this condition will not ocuurs
+  shouldComponentUpdate (nextProps) {
     return nextProps.metrics !== null && !nextProps.metrics.today
   }
   render() {
     const { metrics } = this.props
 
     return (
-    //to show the metric card of five ativities
       <View style={styles.container}>
         <MetricCard metrics={metrics} />
         <TextButton style={{margin: 20}} onPress={this.reset}>
@@ -64,6 +52,15 @@ const styles = StyleSheet.create({
   },
 })
 
+function mapStateToProps (state, { navigation }) {
+  const { entryId } = navigation.state.params
+
+  return {
+    entryId,
+    metrics: state[entryId],
+  }
+}
+
 function mapDispatchToProps (dispatch, { navigation }) {
   const { entryId } = navigation.state.params
 
@@ -74,22 +71,6 @@ function mapDispatchToProps (dispatch, { navigation }) {
         : null
     })),
     goBack: () => navigation.goBack(),
-  }
-}
-
-
-
-
-
-//navigation is a current props
-function mapStateToProps (state, { navigation }) {
-    //entryId :key of the specific day
-  const { entryId } = navigation.state.params
-
-  return {
-    entryId,
-    //metrci:specific info at that [entryId]
-    metrics: state[entryId],
   }
 }
 
