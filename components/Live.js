@@ -2,19 +2,18 @@ import React, { Component } from 'react'
 import { View, Text, ActivityIndicator, TouchableOpacity, StyleSheet, Animated } from 'react-native'
 import { Foundation } from '@expo/vector-icons'
 import { purple, white } from '../utils/colors'
-import {Location,Permissions} from 'expo'
-import {calculateDirection} from '../utils/helpers'  		  
+import { Location, Permissions } from 'expo'
+import { calculateDirection } from '../utils/helpers'
+
 
 export default class Live extends Component {
   state = {
     coords: null,
-    status: undetermined,
+    status: null,
     direction: '',
-    bounceValue: new Animated.Value(1),
+    bounceValue: new Animated.Value(1)
   }
-
-componentDidMount () {
-  //to make sure we have a correct permission
+  componentDidMount () {
     Permissions.getAsync(Permissions.LOCATION)
       .then(({ status }) => {
         if (status === 'granted') {
@@ -30,9 +29,7 @@ componentDidMount () {
       })
   }
 
-
-//ask user for a permission
-askPermission = () => {
+  askPermission = () => {
     Permissions.askAsync(Permissions.LOCATION)
       .then(({ status }) => {
         if (status === 'granted') {
@@ -43,30 +40,23 @@ askPermission = () => {
       })
       .catch((error) => console.warn('error asking Location permission: ', error))
   }
-//this invoked when user granted acces from user
- setLocation = () => {
+  //when we have confirmed that we have correct permission to get location
+  setLocation = () => {
     Location.watchPositionAsync({
       enableHighAccuracy: true,
       timeInterval: 1,
       distanceInterval: 1,
-    }, 
-    //this is a call back as a second argument from watchPositionAsync
-    // when ever the position of phone changes,,this function is called and pass the phone coordinates
-    //this return us: North East
-    ({ coords }) => {
+    }, ({ coords }) => {
+      //return north , northeast
       const newDirection = calculateDirection(coords.heading)
-      //old direction:direction
       const { direction, bounceValue } = this.state
-      
-      //animation if the direction changes
-    if (newDirection !== direction) {
+
+      if (newDirection !== direction) {
         Animated.sequence([
           Animated.timing(bounceValue, { duration: 200, toValue: 1.04}),
           Animated.spring(bounceValue, { toValue: 1, friction: 4})
         ]).start()
       }
-
-
 
       this.setState(() => ({
         coords,
@@ -75,16 +65,14 @@ askPermission = () => {
       }))
     })
   }
-
   render() {
-    const { status, coords, direction,bounceValue } = this.state
+    const { status, coords, direction ,bounceValue } = this.state
+    
 
-      //if user have any permission yet
     if (status === null) {
       return <ActivityIndicator style={{marginTop: 30}}/>
     }
-  
-    //user asked permission but didn't give to him
+
     if (status === 'denied') {
       return (
         <View style={styles.center}>
@@ -95,8 +83,6 @@ askPermission = () => {
         </View>
       )
     }
-
-
 
     if (status === 'undetermined') {
       return (
@@ -114,8 +100,6 @@ askPermission = () => {
       )
     }
 
-
-    
     return (
       <View style={styles.container}>
         <View style={styles.directionContainer}>

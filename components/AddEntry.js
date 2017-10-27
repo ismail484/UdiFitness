@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet, Platform} from 'react-native'
-import { getMetricMetaInfo,timeToString,getDailyReminderValue  } from '../utils/helpers'
+import { getMetricMetaInfo,timeToString,getDailyReminderValue,
+  clearLocalNotification,
+   setLocalNotification  } from '../utils/helpers'
 import Slider from './Slider'
 import Steppers from './Steppers'
 import DateHeader from './DateHeader'
@@ -83,6 +85,9 @@ submit = () => {
      submitEntry({ key, entry })
  
      // Clear local notification
+     clearLocalNotification()
+      .then(setLocalNotification)
+     
    }
 
 reset=()=>{
@@ -99,7 +104,7 @@ reset=()=>{
  
      removeEntry(key)
  
-     // Clear local notification
+     
 
 
 }
@@ -127,7 +132,7 @@ if (this.props.alreadyLogged) {
 
 return (
       <View style={styles.container}> 
-              {/* <DateHeader date={(new Date()).toLocaleDateString()}/>   */}
+               {/* <DateHeader date={new Date().toLocaleDateString()}/>    */}
         {/* return array with five property swim ,eat.run.. */}
         {Object.keys(metaInfo).map((key) => {
           //we grap all property from a specific key , the key is run or eat ,..
