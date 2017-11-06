@@ -132,7 +132,7 @@ if (this.props.alreadyLogged) {
 
 return (
       <View style={styles.container}> 
-               {/* <DateHeader date={new Date().toLocaleDateString()}/>    */}
+                {/* <DateHeader date={new Date().toLocaleDateString()}/>     */}
         {/* return array with five property swim ,eat.run.. */}
         {Object.keys(metaInfo).map((key) => {
           //we grap all property from a specific key , the key is run or eat ,..
